@@ -21,6 +21,7 @@ type entry struct {
 	Title     string    `json:"title"`
 	URL       string    `json:"url"`
 	Content   string    `json:"content"`
+	Status    string    `json:"status"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

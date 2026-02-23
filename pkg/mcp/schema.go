@@ -79,6 +79,11 @@ var (
 				Type:        "string",
 				Description: "content of the entry",
 			},
+			"status": {
+				Type:        "string",
+				Description: "statues of the entry",
+				Enum:        []any{"unread", "read", "removed"},
+			},
 			"createdAt": {
 				Type:        "string",
 				Format:      "date-time",

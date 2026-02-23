@@ -94,6 +94,7 @@ func (h *handler) getEntry(ctx context.Context, req *mcp.CallToolRequest, args g
 		URL:       e.URL,
 		Content:   markdown,
 		CreatedAt: e.CreatedAt,
+		Status:    e.Status,
 	}
 
 	textContent, err := json.Marshal(output)
@@ -185,6 +186,7 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 			URL:       e.URL,
 			Content:   markdown,
 			CreatedAt: e.CreatedAt,
+			Status:    e.Status,
 		}
 	}
 
