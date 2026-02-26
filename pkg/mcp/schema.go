@@ -50,12 +50,12 @@ var (
 			"publishedAfter": {
 				Type:        "string",
 				Format:      "date-time",
-				Description: "filter entries published after this date",
+				Description: "filter entries published after this date in ISO 8601 format",
 			},
 			"publishedBefore": {
 				Type:        "string",
 				Format:      "date-time",
-				Description: "filter entries published before this date",
+				Description: "filter entries published before this date in ISO 8601 format",
 			},
 		},
 	}
