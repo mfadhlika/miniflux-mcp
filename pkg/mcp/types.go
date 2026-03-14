@@ -23,6 +23,7 @@ type entry struct {
 	Content   string    `json:"content"`
 	Status    string    `json:"status"`
 	CreatedAt time.Time `json:"createdAt"`
+	Feed      *feed     `json:"feed"`
 }
 
 type getEntryResult struct {
@@ -34,9 +35,15 @@ type getEntriesResult struct {
 }
 
 type feed struct {
+	ID       int64     `json:"id"`
+	Title    string    `json:"string"`
+	URL      string    `json:"url"`
+	Category *category `json:"category"`
+}
+
+type category struct {
 	ID    int64  `json:"id"`
 	Title string `json:"string"`
-	URL   string `json:"url"`
 }
 
 type getFeedsResult struct {

@@ -89,6 +89,7 @@ var (
 				Format:      "date-time",
 				Description: "time the entry created at",
 			},
+			"feed": feedSchema,
 		},
 	}
 
@@ -111,6 +112,21 @@ var (
 			"url": {
 				Type:        "string",
 				Description: "url of the entry",
+			},
+			"category": categorySchema,
+		},
+	}
+
+	categorySchema = &jsonschema.Schema{
+		Type: "object",
+		Properties: map[string]*jsonschema.Schema{
+			"id": {
+				Type:        "integer",
+				Description: "id of the category",
+			},
+			"title": {
+				Type:        "string",
+				Description: "title of the category",
 			},
 		},
 	}

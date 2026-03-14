@@ -95,6 +95,15 @@ func (h *handler) getEntry(ctx context.Context, req *mcp.CallToolRequest, args g
 		Content:   markdown,
 		CreatedAt: e.CreatedAt,
 		Status:    e.Status,
+		Feed: &feed{
+			ID:    e.Feed.ID,
+			Title: e.Feed.Title,
+			URL:   e.Feed.SiteURL,
+			Category: &category{
+				ID:    e.Feed.Category.ID,
+				Title: e.Feed.Category.Title,
+			},
+		},
 	}
 
 	textContent, err := json.Marshal(output)
@@ -187,6 +196,15 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 			Content:   markdown,
 			CreatedAt: e.CreatedAt,
 			Status:    e.Status,
+			Feed: &feed{
+				ID:    e.Feed.ID,
+				Title: e.Feed.Title,
+				URL:   e.Feed.SiteURL,
+				Category: &category{
+					ID:    e.Feed.Category.ID,
+					Title: e.Feed.Category.Title,
+				},
+			},
 		}
 	}
 
