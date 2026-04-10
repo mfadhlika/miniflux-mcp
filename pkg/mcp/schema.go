@@ -7,6 +7,10 @@ import (
 )
 
 var (
+	getCategoriesSchema = &jsonschema.Schema{
+		Type: "object",
+	}
+
 	getFeedSchema = &jsonschema.Schema{
 		Type: "object",
 	}
@@ -40,8 +44,8 @@ var (
 				Default:     json.RawMessage("100"),
 			},
 			"category": {
-				Type:        "string",
-				Description: "category of the entries",
+				Type:        "integer",
+				Description: "category id of the entries",
 			},
 			"feed": {
 				Type:        "string",
@@ -129,6 +133,11 @@ var (
 				Description: "title of the category",
 			},
 		},
+	}
+
+	categoriesSchema = &jsonschema.Schema{
+		Type:  "array",
+		Items: categorySchema,
 	}
 
 	feedsSchema = &jsonschema.Schema{

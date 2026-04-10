@@ -21,23 +21,61 @@ func RegisterTools(server *mcp.Server, minifluxUrl string) {
 	h := handler{minifluxUrl}
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name: "get_feeds", Description: "Get list of subcribed feeds on Miniflux instance",
+		Name: "get_categories", Description: "Get list of user's feed categories on Miniflux instance",
+		InputSchema: getCategoriesSchema,
+	}, h.getCategories)
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "get_feeds", Description: "Get list of user's subcribed feeds on Miniflux instance",
 		InputSchema: getFeedSchema,
 	}, h.getFeeds)
 
 	mcp.AddTool(server,
 		&mcp.Tool{
 			Name:        "get_entry",
-			Description: "Get an entry of subcribed feeds on Miniflux instance by its id",
+			Description: "Get a feed entry on Miniflux instance by its id",
 			InputSchema: getEntrySchema,
 		},
 		h.getEntry)
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "get_entries",
-		Description: "Get entries of subcribed feeds on Miniflux instance",
+		Description: "Get feeds entries on Miniflux instance",
 		InputSchema: getEntriesSchema,
 	}, h.getEntries)
+}
+
+func (h *handler) getCategories(ctx context.Context, req *mcp.CallToolRequest, _ any) (*mcp.CallToolResult, *getCategoriesResult, error) {
+	minifluxApiKey := req.Extra.Header.Get("X-Api-Key")
+	minifluxCli := miniflux.NewClient(h.minifluxUrl, minifluxApiKey)
+
+	categories, err := minifluxCli.CategoriesContext(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	output := make([]category, len(categories))
+	for i := range categories {
+		output[i] = category{
+			ID:    categories[i].ID,
+			Title: categories[i].Title,
+		}
+	}
+
+	textContent, err := json.Marshal(output)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &mcp.CallToolResult{
+			Content: []mcp.Content{
+				&mcp.TextContent{
+					Text: string(textContent),
+				},
+			},
+		}, &getCategoriesResult{
+			Categories: output,
+		}, nil
 }
 
 func (h *handler) getFeeds(ctx context.Context, req *mcp.CallToolRequest, _ any) (*mcp.CallToolResult, *getFeedsResult, error) {
@@ -126,21 +164,6 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 	minifluxApiKey := req.Extra.Header.Get("X-Api-Key")
 	minifluxCli := miniflux.NewClient(h.minifluxUrl, minifluxApiKey)
 
-	var categoryID int64
-	if args.Category != "" {
-		categories, err := minifluxCli.CategoriesContext(ctx)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		for _, category := range categories {
-			if strings.EqualFold(category.Title, args.Category) {
-				categoryID = category.ID
-				break
-			}
-		}
-	}
-
 	var feedID int64
 	if args.Feed != "" {
 		feeds, err := minifluxCli.FeedsContext(ctx)
@@ -170,7 +193,7 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 		Direction:       "asc",
 		Search:          args.Search,
 		Limit:           args.Limit,
-		CategoryID:      categoryID,
+		CategoryID:      args.Category,
 		FeedID:          feedID,
 		PublishedBefore: publishedBefore,
 		PublishedAfter:  publishedAfter,

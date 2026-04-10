@@ -10,7 +10,7 @@ type getEntriesParams struct {
 	Status          string    `json:"status"`
 	Search          string    `json:"search"`
 	Limit           int       `json:"limit"`
-	Category        string    `json:"category"`
+	Category        int64     `json:"category"`
 	Feed            string    `json:"feed"`
 	PublishedAfter  time.Time `json:"publishedAfter"`
 	PublishedBefore time.Time `json:"publishedBefore"`
@@ -44,6 +44,10 @@ type feed struct {
 type category struct {
 	ID    int64  `json:"id"`
 	Title string `json:"string"`
+}
+
+type getCategoriesResult struct {
+	Categories []category `json:"categories"`
 }
 
 type getFeedsResult struct {
