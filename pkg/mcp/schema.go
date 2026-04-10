@@ -145,12 +145,24 @@ var (
 	}
 
 	categoriesSchema = &jsonschema.Schema{
-		Type:  "object",
-		Items: categorySchema,
+		Type: "object",
+		Properties: map[string]*jsonschema.Schema{
+			"categories": {
+				Type:        "array",
+				Items:       categorySchema,
+				Description: "collection of category",
+			},
+		},
 	}
 
 	feedsSchema = &jsonschema.Schema{
-		Type:  "array",
-		Items: feedSchema,
+		Type: "object",
+		Properties: map[string]*jsonschema.Schema{
+			"feeds": {
+				Type:        "array",
+				Items:       feedSchema,
+				Description: "collection of feed",
+			},
+		},
 	}
 )

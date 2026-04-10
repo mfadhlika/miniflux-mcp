@@ -54,9 +54,12 @@ func (h *handler) getCategories(ctx context.Context, req *mcp.CallToolRequest, _
 		return nil, nil, err
 	}
 
-	output := make([]category, len(categories))
+	output := &getCategoriesResult{
+		Categories: make([]category, len(categories)),
+	}
+
 	for i := range categories {
-		output[i] = category{
+		output.Categories[i] = category{
 			ID:    categories[i].ID,
 			Title: categories[i].Title,
 		}
@@ -68,14 +71,12 @@ func (h *handler) getCategories(ctx context.Context, req *mcp.CallToolRequest, _
 	}
 
 	return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{
-					Text: string(textContent),
-				},
+		Content: []mcp.Content{
+			&mcp.TextContent{
+				Text: string(textContent),
 			},
-		}, &getCategoriesResult{
-			Categories: output,
-		}, nil
+		},
+	}, output, nil
 }
 
 func (h *handler) getFeeds(ctx context.Context, req *mcp.CallToolRequest, _ any) (*mcp.CallToolResult, *getFeedsResult, error) {
@@ -87,9 +88,12 @@ func (h *handler) getFeeds(ctx context.Context, req *mcp.CallToolRequest, _ any)
 		return nil, nil, err
 	}
 
-	output := make([]feed, len(feeds))
+	output := &getFeedsResult{
+		Feeds: make([]feed, len(feeds)),
+	}
+
 	for i, f := range feeds {
-		output[i] = feed{
+		output.Feeds[i] = feed{
 			ID:    f.ID,
 			Title: f.Title,
 			URL:   f.SiteURL,
@@ -102,14 +106,12 @@ func (h *handler) getFeeds(ctx context.Context, req *mcp.CallToolRequest, _ any)
 	}
 
 	return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{
-					Text: string(textContent),
-				},
+		Content: []mcp.Content{
+			&mcp.TextContent{
+				Text: string(textContent),
 			},
-		}, &getFeedsResult{
-			Feeds: output,
-		}, nil
+		},
+	}, output, nil
 }
 
 func (h *handler) getEntry(ctx context.Context, req *mcp.CallToolRequest, args getEntryParams) (*mcp.CallToolResult, *getEntryResult, error) {
@@ -126,20 +128,22 @@ func (h *handler) getEntry(ctx context.Context, req *mcp.CallToolRequest, args g
 		log.Fatal(err)
 	}
 
-	output := entry{
-		ID:        e.ID,
-		Title:     e.Title,
-		URL:       e.URL,
-		Content:   markdown,
-		CreatedAt: e.CreatedAt,
-		Status:    e.Status,
-		Feed: &feed{
-			ID:    e.Feed.ID,
-			Title: e.Feed.Title,
-			URL:   e.Feed.SiteURL,
-			Category: &category{
-				ID:    e.Feed.Category.ID,
-				Title: e.Feed.Category.Title,
+	output := &getEntryResult{
+		Entry: entry{
+			ID:        e.ID,
+			Title:     e.Title,
+			URL:       e.URL,
+			Content:   markdown,
+			CreatedAt: e.CreatedAt,
+			Status:    e.Status,
+			Feed: &feed{
+				ID:    e.Feed.ID,
+				Title: e.Feed.Title,
+				URL:   e.Feed.SiteURL,
+				Category: &category{
+					ID:    e.Feed.Category.ID,
+					Title: e.Feed.Category.Title,
+				},
 			},
 		},
 	}
@@ -150,14 +154,12 @@ func (h *handler) getEntry(ctx context.Context, req *mcp.CallToolRequest, args g
 	}
 
 	return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{
-					Text: string(textContent),
-				},
+		Content: []mcp.Content{
+			&mcp.TextContent{
+				Text: string(textContent),
 			},
-		}, &getEntryResult{
-			Entry: output,
-		}, nil
+		},
+	}, output, nil
 }
 
 func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args getEntriesParams) (*mcp.CallToolResult, *getEntriesResult, error) {
