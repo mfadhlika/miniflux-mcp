@@ -32,6 +32,7 @@ type getEntryResult struct {
 
 type getEntriesResult struct {
 	Entries []entry `json:"entries"`
+	Total   int     `json:"total"`
 }
 
 type feed struct {

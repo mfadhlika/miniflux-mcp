@@ -98,8 +98,17 @@ var (
 	}
 
 	entriesSchema = &jsonschema.Schema{
-		Type:  "array",
-		Items: entrySchema,
+		Type: "object",
+		Properties: map[string]*jsonschema.Schema{
+			"entries": {
+				Type:  "array",
+				Items: entrySchema,
+			},
+			"total": {
+				Type:        "integer",
+				Description: "number of entries",
+			},
+		},
 	}
 
 	feedSchema = &jsonschema.Schema{
@@ -136,7 +145,7 @@ var (
 	}
 
 	categoriesSchema = &jsonschema.Schema{
-		Type:  "array",
+		Type:  "object",
 		Items: categorySchema,
 	}
 

@@ -204,7 +204,10 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 		return nil, nil, err
 	}
 
-	output := make([]entry, len(entries.Entries))
+	output := &getEntriesResult{
+		Entries: make([]entry, len(entries.Entries)),
+		Total:   entries.Total,
+	}
 
 	for i, e := range entries.Entries {
 		markdown, err := htmltomarkdown.ConvertString(e.Content)
@@ -212,7 +215,7 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 			log.Fatal(err)
 		}
 
-		output[i] = entry{
+		output.Entries[i] = entry{
 			ID:        e.ID,
 			Title:     e.Title,
 			URL:       e.URL,
@@ -237,12 +240,10 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 	}
 
 	return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{
-					Text: string(textContent),
-				},
+		Content: []mcp.Content{
+			&mcp.TextContent{
+				Text: string(textContent),
 			},
-		}, &getEntriesResult{
-			Entries: output,
-		}, nil
+		},
+	}, output, nil
 }
