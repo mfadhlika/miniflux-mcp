@@ -48,8 +48,8 @@ var (
 				Description: "category id of the entries",
 			},
 			"feed": {
-				Type:        "string",
-				Description: "feed of the entries",
+				Type:        "integer",
+				Description: "feed id of the entries",
 			},
 			"publishedAfter": {
 				Type:        "string",

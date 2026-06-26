@@ -11,7 +11,7 @@ type getEntriesParams struct {
 	Search          string    `json:"search"`
 	Limit           int       `json:"limit"`
 	Category        int64     `json:"category"`
-	Feed            string    `json:"feed"`
+	Feed            int64     `json:"feed"`
 	PublishedAfter  time.Time `json:"publishedAfter"`
 	PublishedBefore time.Time `json:"publishedBefore"`
 }

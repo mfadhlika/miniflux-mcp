@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
@@ -166,19 +165,6 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 	minifluxApiKey := req.Extra.Header.Get("X-Api-Key")
 	minifluxCli := miniflux.NewClient(h.minifluxUrl, minifluxApiKey)
 
-	var feedID int64
-	if args.Feed != "" {
-		feeds, err := minifluxCli.FeedsContext(ctx)
-		if err != nil {
-			return nil, nil, err
-		}
-		for _, feed := range feeds {
-			if strings.EqualFold(feed.Title, args.Feed) {
-				feedID = feed.ID
-			}
-		}
-	}
-
 	var publishedBefore int64
 	if !args.PublishedBefore.IsZero() {
 		publishedBefore = args.PublishedBefore.Unix()
@@ -196,7 +182,7 @@ func (h *handler) getEntries(ctx context.Context, req *mcp.CallToolRequest, args
 		Search:          args.Search,
 		Limit:           args.Limit,
 		CategoryID:      args.Category,
-		FeedID:          feedID,
+		FeedID:          args.Feed,
 		PublishedBefore: publishedBefore,
 		PublishedAfter:  publishedAfter,
 	}
